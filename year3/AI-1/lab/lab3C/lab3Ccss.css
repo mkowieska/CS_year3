@@ -5,7 +5,7 @@ body {
 }
 
 #mapContainer {
-    width: 400px; /* Stała szerokość kontenera */
+    width: 300px; /* Stała szerokość kontenera */
     height: 300px; /* Stała wysokość kontenera */
     margin: 20px auto;
     border: 2px solid #333; /* Opcjonalnie obramowanie */
@@ -28,7 +28,7 @@ button {
     margin-top: 20px;
 }
 #puzzleBoard {
-    width: 400px; /* Stała szerokość puzzli */
+    width: 300px; /* Stała szerokość puzzli */
     height: 300px; /* Stała wysokość puzzli */
     border: 2px dashed #555;
     position: relative;
@@ -36,7 +36,7 @@ button {
     display: inline-block;
 }
 #puzzlePieces {
-    width: 400px; /* Dopasowane do puzzli */
+    width: 300px; /* Dopasowane do puzzli */
     height: 300px;
     position: relative;
     border: 2px solid #000;
@@ -48,5 +48,5 @@ button {
     position: absolute;
     cursor: grab;
     border: 1px solid #333;
-    background-size: 400px 300px; /* Dopasowanie do rozmiaru mapy */
+    background-size: 300px 300px; /* Dopasowanie do rozmiaru mapy */
 }
