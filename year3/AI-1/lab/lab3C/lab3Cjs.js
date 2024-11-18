@@ -74,12 +74,12 @@ function createPuzzlePieces() {
     const imgHeight = mapCanvas.height;
 
     // Set puzzle board dimensions to match the map canvas
-    puzzleBoard.style.width = imgWidth + "px"; // Set width to match map width
-    puzzleBoard.style.height = imgHeight + "px"; // Set height to match map height
+    puzzleBoard.style.width = imgWidth; //+ "px"; // Set width to match map width
+    puzzleBoard.style.height = imgHeight;// + "px"; // Set height to match map height
 
     // Set puzzle pieces container to match the size of the map
-    puzzlePiecesContainer.style.width = imgWidth + "px";
-    puzzlePiecesContainer.style.height = imgHeight + "px";
+    puzzlePiecesContainer.style.width = imgWidth; //+ "px";
+    puzzlePiecesContainer.style.height = imgHeight;// + "px";
 
     // Set piece size to divide the image into equal parts
     const rows = 4; // Adjustable number of rows
