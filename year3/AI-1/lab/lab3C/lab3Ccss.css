@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+}
+
+#mapContainer {
+    width: 800px; /* Stała szerokość kontenera */
+    height: 600px; /* Stała wysokość kontenera */
+    margin: 20px auto;
+    border: 2px solid #333; /* Opcjonalnie obramowanie */
+}
+#map {
+    width: 100%; /* Wypełnia kontener */
+    height: 100%; /* Wypełnia kontener */
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#puzzleContainer {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+#puzzleBoard {
+    width: 800px; /* Stała szerokość puzzli */
+    height: 600px; /* Stała wysokość puzzli */
+    border: 2px dashed #555;
+    position: relative;
+    margin: 20px auto;
+    display: inline-block;
+}
+#puzzlePieces {
+    width: 800px; /* Dopasowane do puzzli */
+    height: 600px;
+    position: relative;
+    border: 2px solid #000;
+    margin: 20px auto;
+}
+.puzzle-piece {
+    width: 75px;
+    height: 75px;
+    position: absolute;
+    cursor: grab;
+    border: 1px solid #333;
+    background-size: 800px 600px; /* Dopasowanie do rozmiaru mapy */
+}
