@@ -1,7 +1,7 @@
 let map, mapCanvas;
-const pieceSize = 75;  // Size of each puzzle piece (75x75px)
-const pieces = [];      // To store puzzle pieces
-const correctPositions = []; // To check if the puzzle is correctly placed
+const pieceSize = 75;  // Rozmiar każdego puzzla (75x75px)
+const pieces = [];      // Tablica przechowująca elementy puzzli
+const correctPositions = []; // Tablica do przechowywania poprawnych pozycji puzzli
 
 document.addEventListener("DOMContentLoaded", () => {
     initializeMap();
@@ -9,34 +9,29 @@ document.addEventListener("DOMContentLoaded", () => {
     requestPermissions();
 });
 
-// Initialize the map with Leaflet.js
+// Inicjalizacja mapy
 function initializeMap() {
-    map = L.map('map').setView([51.505, -0.09], 13);  // Center on London initially
+    map = L.map('map').setView([51.505, -0.09], 13);  // Początkowy widok mapy Londynu
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '© OpenStreetMap'
     }).addTo(map);
-
-    // Event to update the canvas when the map view changes
     map.on("moveend", updateMapCanvas);
 }
 
-// Initialize buttons
+// Inicjalizacja przycisków
 function initializeButtons() {
     document.getElementById("myLocationBtn").addEventListener("click", locateUser);
     document.getElementById("downloadMapBtn").addEventListener("click", downloadMapAsImage);
 }
 
-// Request geolocation and notification permissions
+// Wnioski o uprawnienia do geolokalizacji i notyfikacji
 function requestPermissions() {
-    // Geolocation permission
     if ("geolocation" in navigator) {
         console.log("Geolocation is supported.");
     } else {
         alert("Geolocation is not available.");
     }
-
-    // Notification permission for Edge
     if (window.Notification && Notification.permission !== "granted") {
         Notification.requestPermission().then(permission => {
             console.log("Notification permission:", permission);
@@ -44,18 +39,18 @@ function requestPermissions() {
     }
 }
 
-// Locate user and update the map
+// Lokalizowanie użytkownika i aktualizacja mapy
 function locateUser() {
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
             position => {
                 const { latitude, longitude } = position.coords;
-                console.log("User location:", latitude, longitude); // Debugging
+                console.log("User location:", latitude, longitude);
                 map.setView([latitude, longitude], 13);
             },
             error => {
-                console.error("Geolocation error:", error); // Debugging
-                alert("Unable to retrieve your location. Please check your settings.");
+                console.error("Geolocation error:", error);
+                alert("Unable to find your location. Please check your settings.");
             }
         );
     } else {
@@ -63,10 +58,9 @@ function locateUser() {
     }
 }
 
-// Download map as an image and initialize puzzle pieces
+// Pobieranie mapy jako obraz i generowanie puzzli
 function downloadMapAsImage() {
     setTimeout(() => {
-        // Using leafletImage instead of html2canvas
         leafletImage(map, (err, canvas) => {
             if (err) {
                 console.error("Error capturing the map:", err);
@@ -74,43 +68,45 @@ function downloadMapAsImage() {
                 return;
             }
             mapCanvas = canvas;
-            createPuzzlePieces(); // Create puzzle pieces from the map image
+            const dataUrl = mapCanvas.toDataURL();
+            downloadImage(dataUrl, "map-image.png");
+            createPuzzlePieces();
         });
-    }, 1000); // Delay to ensure the map is fully loaded before capturing
+    }, 1000); // Opóźnienie, aby upewnić się, że mapa jest załadowana
 }
 
-// Generate puzzle pieces
+// Funkcja do pobierania obrazu mapy
+function downloadImage(dataUrl, filename) {
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = filename;
+    link.click();
+}
+
+// Funkcja do generowania puzzli
 function createPuzzlePieces() {
     const piecesContainer = document.getElementById("puzzlePieces");
-    piecesContainer.innerHTML = '';  // Clear any existing pieces
-    correctPositions.length = 0; // Reset correct positions array
-
-    // Calculate positions for 16 puzzle pieces (4x4 grid)
+    piecesContainer.innerHTML = '';  // Czyszczenie kontenera puzzli
+    correctPositions.length = 0; // Resetowanie tablicy poprawnych pozycji
     for (let i = 0; i < 16; i++) {
         const piece = document.createElement("div");
         piece.className = "puzzle-piece";
-
-        // Set the background image of the piece
+        // Ustawienie tła dla puzzla
         piece.style.backgroundImage = `url(${mapCanvas.toDataURL()})`;
-
-        // Set the background position for each piece to crop the map image
+        // Ustawienie tła dla poszczególnych kawałków
         const x = (i % 4) * pieceSize;
         const y = Math.floor(i / 4) * pieceSize;
         piece.style.backgroundPosition = `-${x}px -${y}px`;
-
-        // Set dimensions for the piece
+        // Ustawienie wymiarów puzzli
         piece.style.width = pieceSize + 'px';
         piece.style.height = pieceSize + 'px';
-
-        // Ensure positioning is absolute for proper drag-and-drop functionality
+        // Pozycjonowanie puzzli (przypadkowe miejsce początkowe)
         piece.style.position = 'absolute';
-        piece.style.left = `${Math.random() * 200}px`; // Randomize initial position
+        piece.style.left = `${Math.random() * 200}px`; // Losowa pozycja początkowa
         piece.style.top = `${Math.random() * 200}px`;
-
         piece.setAttribute("data-index", i);
         piece.draggable = true;
-
-        // Add event listeners for drag-and-drop
+        // Eventy drag and drop
         piece.addEventListener("dragstart", onDragStart);
         piece.addEventListener("dragend", onDragEnd);
         piecesContainer.appendChild(piece);
@@ -119,85 +115,73 @@ function createPuzzlePieces() {
     }
 }
 
-// Handle the drag start event
+// Obsługa zdarzenia dragstart
 function onDragStart(event) {
     event.dataTransfer.setData("text/plain", event.target.dataset.index);
-    event.target.style.opacity = 0.5; // Dim the piece being dragged
+    event.target.style.opacity = 0.5; // Zmiana przezroczystości przeciąganego puzzla
 }
 
-// Handle the drag end event
+// Obsługa zdarzenia dragend
 function onDragEnd(event) {
-    event.target.style.opacity = 1; // Reset opacity
+    event.target.style.opacity = 1; // Przywrócenie pełnej przezroczystości
 }
 
-// Enable drop functionality on the puzzle board
+// Zezwolenie na upuszczanie puzzli na planszy
 const puzzleBoard = document.getElementById("puzzleBoard");
 puzzleBoard.addEventListener("dragover", (event) => {
-    event.preventDefault(); // Allow drop
+    event.preventDefault(); // Zezwolenie na upuszczanie
 });
 
 puzzleBoard.addEventListener("drop", (event) => {
     event.preventDefault();
     const pieceIndex = event.dataTransfer.getData("text/plain");
     const piece = pieces[pieceIndex];
-
-    // Calculate the drop position on the board
+    // Obliczenie pozycji upuszczenia na planszy
     const rect = puzzleBoard.getBoundingClientRect();
     const left = event.clientX - rect.left - (pieceSize / 2);
     const top = event.clientY - rect.top - (pieceSize / 2);
-
-    // Snap to grid
+    // Przypisanie do siatki
     piece.style.left = Math.round(left / pieceSize) * pieceSize + "px";
     piece.style.top = Math.round(top / pieceSize) * pieceSize + "px";
-
+    // Sprawdzenie poprawności układanki
+    checkPieceCorrectness(piece);
     checkCompletion();
 });
 
-// Enable drop functionality on the puzzle pieces container (left side)
-const puzzlePiecesContainer = document.getElementById("puzzlePieces");
-puzzlePiecesContainer.addEventListener("dragover", (event) => {
-    event.preventDefault(); // Allow drop
-});
+// Funkcja do sprawdzenia, czy pojedynczy puzzel jest w poprawnym miejscu
+function checkPieceCorrectness(piece) {
+    const index = parseInt(piece.dataset.index);
+    const correctPosition = correctPositions[index];
+    const left = parseInt(piece.style.left);
+    const top = parseInt(piece.style.top);
+    if (left === correctPosition.left && top === correctPosition.top) {
+        console.log(`Puzzle ${index + 1} jest poprawnie ustawione!`);
+    }
+}
 
-puzzlePiecesContainer.addEventListener("drop", (event) => {
-    event.preventDefault();
-    const pieceIndex = event.dataTransfer.getData("text/plain");
-    const piece = pieces[pieceIndex];
-
-    // Calculate the drop position in the left container (puzzle pieces area)
-    const rect = puzzlePiecesContainer.getBoundingClientRect();
-    const left = event.clientX - rect.left - (pieceSize / 2);
-    const top = event.clientY - rect.top - (pieceSize / 2);
-
-    // Snap to grid
-    piece.style.left = Math.round(left / pieceSize) * pieceSize + "px";
-    piece.style.top = Math.round(top / pieceSize) * pieceSize + "px";
-});
-
-// Check if all pieces are in the correct positions
+// Funkcja do sprawdzenia, czy wszystkie puzzle są poprawnie ułożone
 function checkCompletion() {
     let completed = true;
-
     for (let i = 0; i < pieces.length; i++) {
         const piece = pieces[i];
         const left = parseInt(piece.style.left);
         const top = parseInt(piece.style.top);
+        // Sprawdzanie, czy puzzle znajdują się w poprawnych pozycjach
         if (left !== correctPositions[i].left || top !== correctPositions[i].top) {
             completed = false;
             break;
         }
     }
-
+    // Jeśli wszystkie puzzle są na swoim miejscu, wyświetlamy komunikat
     if (completed) {
-        alert("Congratulations! All pieces are in the correct position!");
-        // Optionally, send a system notification
+        alert("Gratulacje! Wszystkie puzzle są w poprawnym miejscu!");
         if (Notification.permission === "granted") {
-            new Notification("Puzzle Complete!", { body: "You have successfully completed the puzzle!" });
+            new Notification("Puzzle ułożone.", { body: "Brawo!" });
         }
     }
 }
 
-// Update map canvas when the map is moved
+// Aktualizacja mapy po przesunięciu widoku
 function updateMapCanvas() {
     leafletImage(map, (err, canvas) => {
         if (err) {
