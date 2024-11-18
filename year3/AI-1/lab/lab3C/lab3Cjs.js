@@ -66,6 +66,7 @@ function locateUser() {
 // Download map as an image and initialize puzzle pieces
 function downloadMapAsImage() {
     setTimeout(() => {
+        // Using leafletImage instead of html2canvas
         leafletImage(map, (err, canvas) => {
             if (err) {
                 console.error("Error capturing the map:", err);
