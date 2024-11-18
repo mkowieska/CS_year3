@@ -1,7 +1,7 @@
 let map, mapCanvas;
-const pieceSize = 75;  // Each puzzle piece is 75x75px (4x4 grid, so 300x300 area)
-const pieces = [];      // To hold the pieces for drag and drop functionality
-const correctPositions = []; // To verify correct placements
+const pieceSize = 75;  // Size of each puzzle piece (75x75px)
+const pieces = [];      // To store puzzle pieces
+const correctPositions = []; // To check if the puzzle is correctly placed
 
 document.addEventListener("DOMContentLoaded", () => {
     initializeMap();
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Initialize the map with Leaflet.js
 function initializeMap() {
-    map = L.map('map').setView([51.505, -0.09], 13);  // Centered on London initially
+    map = L.map('map').setView([51.505, -0.09], 13);  // Center on London initially
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '© OpenStreetMap'
@@ -152,7 +152,7 @@ puzzleBoard.addEventListener("drop", (event) => {
     checkCompletion();
 });
 
-// Enable drop functionality on the puzzle pieces container
+// Enable drop functionality on the puzzle pieces container (left side)
 const puzzlePiecesContainer = document.getElementById("puzzlePieces");
 puzzlePiecesContainer.addEventListener("dragover", (event) => {
     event.preventDefault(); // Allow drop
