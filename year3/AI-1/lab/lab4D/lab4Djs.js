@@ -19,7 +19,7 @@ function pobierzAktualnaPogode(miasto) {
     xhr.onload = function () {
         if (xhr.status === 200) {
             const dane = JSON.parse(xhr.responseText);
-            console.log('Odpowiedź bieżącej pogody:', dane); // Log odpowiedzi
+            console.log('Odpowiedź bieżącej pogody:', dane); 
             wyswietlAktualnaPogode(dane);
         } else {
             console.error('Błąd podczas pobierania bieżącej pogody:', xhr.responseText);
