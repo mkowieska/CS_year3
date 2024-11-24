@@ -1,77 +1,80 @@
-const apiKey = '8b8cf1902618a6ccd765eab7d3469ca2';
-const currentWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather';
-const forecastUrl = 'https://api.openweathermap.org/data/2.5/forecast';
+const kluczApi = '8b8cf1902618a6ccd765eab7d3469ca2';
+const urlAktualnaPogoda = 'https://api.openweathermap.org/data/2.5/weather';
+const urlPrognozaPogoda = 'https://api.openweathermap.org/data/2.5/forecast';
 
 document.getElementById('fetch-weather').addEventListener('click', () => {
-    const city = document.getElementById('city-input').value;
-    if (city) {
-        fetchCurrentWeather(city);
-        fetchWeatherForecast(city);
+    const miasto = document.getElementById('city-input').value;
+    if (miasto) {
+        pobierzAktualnaPogode(miasto);
+        pobierzPrognozePogody(miasto);
     } else {
-        alert('Please enter a city name.');
+        alert('Podaj nazwę miasta.');
     }
 });
 
-function fetchCurrentWeather(city) {
+// Kod odpowiedzialny za wysyłanie żądania do aktualnej pogody za pomocą XMLHttpRequest
+function pobierzAktualnaPogode(miasto) {
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `${currentWeatherUrl}?q=${city}&appid=${apiKey}&units=metric`);
+    xhr.open('GET', `${urlAktualnaPogoda}?q=${miasto}&appid=${kluczApi}&units=metric`);
     xhr.onload = function () {
         if (xhr.status === 200) {
-            const data = JSON.parse(xhr.responseText);
-            displayCurrentWeather(data);
+            const dane = JSON.parse(xhr.responseText);
+            console.log('Odpowiedź bieżącej pogody:', dane); // Log odpowiedzi
+            wyswietlAktualnaPogode(dane);
         } else {
-            console.error('Error fetching current weather:', xhr.responseText);
+            console.error('Błąd podczas pobierania bieżącej pogody:', xhr.responseText);
         }
     };
     xhr.onerror = function () {
-        console.error('Network error occurred while fetching current weather.');
+        console.error('Wystąpił błąd sieci podczas pobierania bieżącej pogody.');
     };
     xhr.send();
 }
 
-function fetchWeatherForecast(city) {
-    fetch(`${forecastUrl}?q=${city}&appid=${apiKey}&units=metric`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error fetching weather forecast');
+// Kod odpowiedzialny za wysyłanie żądania do prognozy pogody za pomocą Fetch
+function pobierzPrognozePogody(miasto) {
+    fetch(`${urlPrognozaPogoda}?q=${miasto}&appid=${kluczApi}&units=metric`)
+        .then(odpowiedz => {
+            if (!odpowiedz.ok) {
+                throw new Error('Błąd podczas pobierania prognozy pogody');
             }
-            return response.json();
+            return odpowiedz.json();
         })
-        .then(data => {
-            displayForecast(data);
+        .then(dane => {
+            console.log('Odpowiedź prognozy pogody:', dane); 
+            wyswietlPrognoze(dane);
         })
-        .catch(error => {
-            console.error('Error:', error);
+        .catch(blad => {
+            console.error('Błąd:', blad);
         });
 }
 
-function displayCurrentWeather(data) {
-    const container = document.getElementById('current-weather');
-    const iconUrl = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
-    container.innerHTML = `
-        <img src="${iconUrl}" alt="Weather icon">
-        <p>Temperature: ${data.main.temp}°C</p>
-        <p>Weather: ${data.weather[0].description}</p>
-        <p>Humidity: ${data.main.humidity}%</p>
+function wyswietlAktualnaPogode(dane) {
+    const kontener = document.getElementById('current-weather');
+    const urlIkona = `https://openweathermap.org/img/wn/${dane.weather[0].icon}@2x.png`;
+    kontener.innerHTML = `
+        <img src="${urlIkona}" alt="Ikona pogody">
+        <p>Temperatura: ${dane.main.temp}°C</p>
+        <p>Pogoda: ${dane.weather[0].description}</p>
+        <p>Wilgotność: ${dane.main.humidity}%</p>
     `;
 }
 
-
-function displayForecast(data) {
-    const container = document.getElementById('forecast');
-    container.innerHTML = '';
-    data.list.forEach((forecast, index) => {
-        if (index % 8 === 0) { // Co 8 indeksów (~24 godziny)
-            const iconUrl = `https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`;
+function wyswietlPrognoze(dane) {
+    const kontener = document.getElementById('forecast');
+    kontener.innerHTML = '';
+    dane.list.forEach((prognoza, indeks) => {
+        if (indeks % 8 === 0) { // Co 8 indeksów (~24 godziny)
+            const urlIkona = `https://openweathermap.org/img/wn/${prognoza.weather[0].icon}@2x.png`;
             const div = document.createElement('div');
             div.className = 'forecast';
             div.innerHTML = `
-                <img src="${iconUrl}" alt="Weather icon">
-                <p><strong>${new Date(forecast.dt_txt).toLocaleDateString()}</strong></p>
-                <p>Temp: ${forecast.main.temp}°C</p>
-                <p>${forecast.weather[0].description}</p>
+                <img src="${urlIkona}" alt="Ikona pogody">
+                <p><strong>${new Date(prognoza.dt_txt).toLocaleDateString()}</strong></p>
+                <p>Temperatura: ${prognoza.main.temp}°C</p>
+                <p>${prognoza.weather[0].description}</p>
             `;
-            container.appendChild(div);
+            kontener.appendChild(div);
         }
     });
 }
