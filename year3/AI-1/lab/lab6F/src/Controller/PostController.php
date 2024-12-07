@@ -1,92 +1,99 @@
 <?php
 namespace App\Controller;
 
-use App\Exception\NotFoundException;
-use App\Model\Post;
-use App\Service\Router;
+use App\Service\Config;
 use App\Service\Templating;
+use App\Service\Router;
 
 class PostController
 {
-    public function indexAction(Templating $templating, Router $router): ?string
+//    private $config;
+//    private $templating;
+//    private $router;
+//
+//    public function __construct(Config $config, Templating $templating, Router $router)
+//    {
+//        $this->config = $config;
+//        $this->templating = $templating;
+//        $this->router = $router;
+//    }
+//
+//    // Akcja listy albumów
+//    public function indexAction()
+//    {
+//        $albums = $this->config->getDb()->query("SELECT * FROM albums")->fetchAll(\PDO::FETCH_CLASS, Album::class);
+//        echo $this->templating->render('post/index.php', ['albums' => $albums]);
+//    }
+//
+//    // Akcja szczegółowego widoku albumu
+//    public function showAction($id)
+//    {
+//        $stmt = $this->config->getDb()->prepare("SELECT * FROM albums WHERE id = :id");
+//        $stmt->execute(['id' => $id]);
+//        $album = $stmt->fetchObject(Album::class);
+//
+//        if (!$album) {
+//            throw new \Exception("Album not found!");
+//        }
+//
+//        echo $this->templating->render('post/show.php', ['post' => $album]);
+//    }
+//
+//    // Akcja tworzenia nowego albumu
+//    public function createAction()
+//    {
+//        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//            $stmt = $this->config->getDb()->prepare("INSERT INTO albums (title, artist, release_date) VALUES (:title, :artist, :release_date)");
+//            $stmt->execute([
+//                'title' => $_POST['title'],
+//                'artist' => $_POST['artist'],
+//                'release_date' => $_POST['release_date']
+//            ]);
+//            $this->router->redirect('/albums');
+//        }
+//
+//        echo $this->templating->render('post/create.php');
+//    }
+//
+//    // Akcja edycji albumu
+//    public function editAction($id)
+//    {
+//        $stmt = $this->config->getDb()->prepare("SELECT * FROM albums WHERE id = :id");
+//        $stmt->execute(['id' => $id]);
+//        $album = $stmt->fetchObject(Album::class);
+//
+//        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//            $stmt = $this->config->getDb()->prepare("UPDATE albums SET title = :title, artist = :artist, release_date = :release_date WHERE id = :id");
+//            $stmt->execute([
+//                'id' => $id,
+//                'title' => $_POST['title'],
+//                'artist' => $_POST['artist'],
+//                'release_date' => $_POST['release_date']
+//            ]);
+//            $this->router->redirect('/albums');
+//        }
+//
+//        echo $this->templating->render('post/edit.php', ['post' => $album]);
+//    }
+//
+//    // Akcja kasowania albumu
+//    public function deleteAction($id)
+//    {
+//        $stmt = $this->config->getDb()->prepare("DELETE FROM albums WHERE id = :id");
+//        $stmt->execute(['id' => $id]);
+//        $this->router->redirect('/albums');
+//    }\
+    private $config;
+    private $templating;
+
+    public function __construct(Config $config, Templating $templating)
     {
-        $posts = Post::findAll();
-        $html = $templating->render('post/index.html.php', [
-            'posts' => $posts,
-            'router' => $router,
-        ]);
-        return $html;
+        $this->config = $config;
+        $this->templating = $templating;
     }
 
-    public function createAction(?array $requestPost, Templating $templating, Router $router): ?string
+    public function indexAction()
     {
-        if ($requestPost) {
-            $post = Post::fromArray($requestPost);
-            // @todo missing validation
-            $post->save();
-
-            $path = $router->generatePath('post-index');
-            $router->redirect($path);
-            return null;
-        } else {
-            $post = new Post();
-        }
-
-        $html = $templating->render('post/create.html.php', [
-            'post' => $post,
-            'router' => $router,
-        ]);
-        return $html;
-    }
-
-    public function editAction(int $postId, ?array $requestPost, Templating $templating, Router $router): ?string
-    {
-        $post = Post::find($postId);
-        if (! $post) {
-            throw new NotFoundException("Missing post with id $postId");
-        }
-
-        if ($requestPost) {
-            $post->fill($requestPost);
-            // @todo missing validation
-            $post->save();
-
-            $path = $router->generatePath('post-index');
-            $router->redirect($path);
-            return null;
-        }
-
-        $html = $templating->render('post/edit.html.php', [
-            'post' => $post,
-            'router' => $router,
-        ]);
-        return $html;
-    }
-
-    public function showAction(int $postId, Templating $templating, Router $router): ?string
-    {
-        $post = Post::find($postId);
-        if (! $post) {
-            throw new NotFoundException("Missing post with id $postId");
-        }
-
-        $html = $templating->render('post/show.html.php', [
-            'post' => $post,
-            'router' => $router,
-        ]);
-        return $html;
-    }
-
-    public function deleteAction(int $postId, Router $router): ?string
-    {
-        $post = Post::find($postId);
-        if (! $post) {
-            throw new NotFoundException("Missing post with id $postId");
-        }
-
-        $post->delete();
-        $path = $router->generatePath('post-index');
-        $router->redirect($path);
-        return null;
+        echo "PostController is working!";
     }
 }

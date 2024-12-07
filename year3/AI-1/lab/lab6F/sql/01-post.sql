@@ -1,8 +1,6 @@
-create table post
-(
-    id      integer not null
-        constraint post_pk
-            primary key autoincrement,
-    subject text not null,
-    content text not null
+CREATE TABLE albums (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        title VARCHAR(255) NOT NULL,
+                        artist VARCHAR(255) NOT NULL,
+                        release_date DATE NOT NULL
 );

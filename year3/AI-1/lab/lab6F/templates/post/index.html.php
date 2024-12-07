@@ -1,9 +1,6 @@
 <?php
 
-/** @var \App\Model\Post[] $posts */
-/** @var \App\Service\Router $router */
-
-$title = 'Post List';
+$title = 'Music Album List';
 $bodyClass = 'index';
 
 ob_start(); ?>
