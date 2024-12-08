@@ -3,7 +3,7 @@ namespace App\Model;
 
 use App\Service\Config;
 
-class Post
+class MusicAlbum
 {
     private ?int $id = null;
     private ?string $subject = null;
@@ -14,7 +14,7 @@ class Post
         return $this->id;
     }
 
-    public function setId(?int $id): Post
+    public function setId(?int $id): MusicAlbum
     {
         $this->id = $id;
 
@@ -26,7 +26,7 @@ class Post
         return $this->subject;
     }
 
-    public function setSubject(?string $subject): Post
+    public function setSubject(?string $subject): MusicAlbum
     {
         $this->subject = $subject;
 
@@ -38,22 +38,22 @@ class Post
         return $this->content;
     }
 
-    public function setContent(?string $content): Post
+    public function setContent(?string $content): MusicAlbum
     {
         $this->content = $content;
 
         return $this;
     }
 
-    public static function fromArray($array): Post
+    public static function fromArray($array): MusicAlbum
     {
-        $post = new self();
-        $post->fill($array);
+        $musicalbum = new self();
+        $musicalbum->fill($array);
 
-        return $post;
+        return $musicalbum;
     }
 
-    public function fill($array): Post
+    public function fill($array): MusicAlbum
     {
         if (isset($array['id']) && ! $this->getId()) {
             $this->setId($array['id']);
@@ -71,7 +71,7 @@ class Post
     public static function findAll(): array
     {
         $pdo = new \PDO(Config::get('db_dsn'), Config::get('db_user'), Config::get('db_pass'));
-        $sql = 'SELECT * FROM post';
+        $sql = 'SELECT * FROM musicalbum';
         $statement = $pdo->prepare($sql);
         $statement->execute();
 
@@ -84,10 +84,10 @@ class Post
         return $posts;
     }
 
-    public static function find($id): ?Post
+    public static function find($id): ?MusicAlbum
     {
         $pdo = new \PDO(Config::get('db_dsn'), Config::get('db_user'), Config::get('db_pass'));
-        $sql = 'SELECT * FROM post WHERE id = :id';
+        $sql = 'SELECT * FROM musicalbum WHERE id = :id';
         $statement = $pdo->prepare($sql);
         $statement->execute(['id' => $id]);
 
@@ -95,16 +95,16 @@ class Post
         if (! $postArray) {
             return null;
         }
-        $post = Post::fromArray($postArray);
+        $musicalbum = MusicAlbum::fromArray($postArray);
 
-        return $post;
+        return $musicalbum;
     }
 
     public function save(): void
     {
         $pdo = new \PDO(Config::get('db_dsn'), Config::get('db_user'), Config::get('db_pass'));
         if (! $this->getId()) {
-            $sql = "INSERT INTO post (subject, content) VALUES (:subject, :content)";
+            $sql = "INSERT INTO musicalbum (subject, content) VALUES (:subject, :content)";
             $statement = $pdo->prepare($sql);
             $statement->execute([
                 'subject' => $this->getSubject(),
@@ -113,7 +113,7 @@ class Post
 
             $this->setId($pdo->lastInsertId());
         } else {
-            $sql = "UPDATE post SET subject = :subject, content = :content WHERE id = :id";
+            $sql = "UPDATE musicalbum SET subject = :subject, content = :content WHERE id = :id";
             $statement = $pdo->prepare($sql);
             $statement->execute([
                 ':subject' => $this->getSubject(),
@@ -126,7 +126,7 @@ class Post
     public function delete(): void
     {
         $pdo = new \PDO(Config::get('db_dsn'), Config::get('db_user'), Config::get('db_pass'));
-        $sql = "DELETE FROM post WHERE id = :id";
+        $sql = "DELETE FROM musicalbum WHERE id = :id";
         $statement = $pdo->prepare($sql);
         $statement->execute([
             ':id' => $this->getId(),

@@ -8,34 +8,34 @@ $router = new \App\Service\Router();
 
 $action = $_REQUEST['action'] ?? null;
 switch ($action) {
-    case 'post-index':
+    case 'musicalbum-index':
     case null:
-        $controller = new \App\Controller\PostController();
+        $controller = new \App\Controller\MusicAlbumController();
         $view = $controller->indexAction($templating, $router);
         break;
-    case 'post-create':
-        $controller = new \App\Controller\PostController();
-        $view = $controller->createAction($_REQUEST['post'] ?? null, $templating, $router);
+    case 'musicalbum-create':
+        $controller = new \App\Controller\MusicAlbumController();
+        $view = $controller->createAction($_REQUEST['musicalbum'] ?? null, $templating, $router);
         break;
-    case 'post-edit':
+    case 'musicalbum-edit':
         if (! $_REQUEST['id']) {
             break;
         }
-        $controller = new \App\Controller\PostController();
-        $view = $controller->editAction($_REQUEST['id'], $_REQUEST['post'] ?? null, $templating, $router);
+        $controller = new \App\Controller\MusicAlbumController();
+        $view = $controller->editAction($_REQUEST['id'], $_REQUEST['musicalbum'] ?? null, $templating, $router);
         break;
-    case 'post-show':
+    case 'musicalbum-show':
         if (! $_REQUEST['id']) {
             break;
         }
-        $controller = new \App\Controller\PostController();
+        $controller = new \App\Controller\MusicAlbumController();
         $view = $controller->showAction($_REQUEST['id'], $templating, $router);
         break;
-    case 'post-delete':
+    case 'musicalbum-delete':
         if (! $_REQUEST['id']) {
             break;
         }
-        $controller = new \App\Controller\PostController();
+        $controller = new \App\Controller\MusicAlbumController();
         $view = $controller->deleteAction($_REQUEST['id'], $router);
         break;
     case 'info':
