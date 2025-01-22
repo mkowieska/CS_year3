@@ -1,4 +1,4 @@
-const kluczApi = '8b8cf1902618a6ccd765eab7d3469ca2';
+const kluczApi = '';
 const urlAktualnaPogoda = 'https://api.openweathermap.org/data/2.5/weather';
 const urlPrognozaPogoda = 'https://api.openweathermap.org/data/2.5/forecast';
 
