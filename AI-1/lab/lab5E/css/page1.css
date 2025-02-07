@@ -1,14 +1,14 @@
 body {
     font-family: Bahnschrift, sans-serif;
     padding: 0;
-    background-image: url('E:/projekty_git/Computer_Science/year3/AI-1/lab/lab5E/pictures/pexels-tlo.jpg');
+    background-image: url('C:/Users/martyna-pc/Desktop/aa/CS_year3/AI-1/lab/lab5E/pexels-tlo.jpg');
     background-size: cover; 
     background-position: center;
 }
 
 header {
     /* background-color: rgba(128, 9, 158); */
-    background-image: url('E:projekty_git/Computer_Science/year3/AI-1/lab/lab5E/pictures/pexels-tlo3.jpg');
+    background-image: url('C:/Users/martyna-pc/Desktop/aa/CS_year3/AI-1/lab/lab5E/pexelspexels-tlo3.jpg');
     background-size: cover; 
     background-position: center;
     color: white;

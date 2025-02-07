@@ -47,7 +47,7 @@ function generateStyleLinks() {
 
 document.addEventListener('DOMContentLoaded', function () {
   generateStyleLinks();
-  alert("Dynamic style switcher ready!");
+  alert("Hello!");
 }
 );
 })();
