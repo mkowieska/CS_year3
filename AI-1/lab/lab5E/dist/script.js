@@ -4,7 +4,6 @@
   !*** ./script.ts ***!
   \*******************/
 
-
 // const msg: string = "Hello!";
 // alert(msg);
 var appState = {
@@ -17,6 +16,7 @@ var appState = {
   }
 };
 
+//funkcja zmieniająca styl:
 function changeStyle(styleName) {
   var link = document.querySelector('link[rel="stylesheet"]');
   if (link) {
@@ -25,7 +25,6 @@ function changeStyle(styleName) {
   }
 }
 
-// Generate links dynamically
 function generateStyleLinks() {
   var container = document.createElement('div');
   container.id = 'style-links';
@@ -33,6 +32,7 @@ function generateStyleLinks() {
     var link = document.createElement('a');
     link.href = '#';
     link.textContent = "Zmien na  ".concat(style);
+    //fragment kodu odpowiedzialny za zmianę stylu po kliknięciu na link
     link.addEventListener('click', function () {
       return changeStyle(style);
     });
@@ -47,7 +47,5 @@ function generateStyleLinks() {
 
 document.addEventListener('DOMContentLoaded', function () {
   generateStyleLinks();
-  alert("Hello!");
-}
-);
+});
 })();
